@@ -1,10 +1,17 @@
+let auctionAdmin = new AuctionAdmin();
+auctionAdmin.Initialize();
+
 function AuctionAdmin()
 {
     this.auctions = new Array();
 
     this.Initialize = function()
     {
-        //AddEventListener på Butto
+        let btnCreate = document.getElementById("aution-create");
+        btnCreate.addEventListener("click", () => auctionAdmin.CreateAuction() );
+
+        let btnDelete = document.getElementById("aution-delete"); 
+        btnDelete.addEventListener("click", () => auctionAdmin.DeleteAuction() );
     }
 
     this.PopulateAuctionList = function()
@@ -55,5 +62,14 @@ function AuctionAdmin()
                 console.log('Request success: ', 'posten skapad');
                 //Show something somewhere that says we added an auction.
         })  
+    }
+
+    this.DeleteAuction = function()
+    {
+        console.log("Deleting auction ID: ");
+
+        //Ta bort Bud
+
+        //Ta bort Auktion
     }
 }
