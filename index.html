@@ -15,12 +15,16 @@
             <div id="logo"><h1>Nackowski</h1></div>
             <div id="search">
                 <label for="input-search">Search: </label><input id="input-search" type="text">
+                <button id="btn-search">Search</button>
             </div>
         </header>
         
         <main>
-            <div id="auction-list">
+            <div id="auction-list-container">
                 <div id="auction-list-nav">
+                </div>
+                <div id="auction-list">
+
                 </div>
             </div>
             <div id="auction-details" class="hide">
@@ -29,13 +33,13 @@
                 <p id="auction-description"><strong>Beskrivning: </strong></p>
                 <p id="auction-startdate"><strong>Start Datum: </strong></p>
                 <p id="auction-enddate"><strong>Slut Datum: </strong></p>
-                <p id="auction-countdown"><strong>Nedräkning...</strong></p>
+                <p id="auction-countdown"><strong>Tid kvar:</strong></p>
                 <p id="auction-startingprice"><strong>Utropspris: </strong></p>
                 <p id="auction-highestbid"><strong>Ledande Bud: </strong></p>
                 <p id="auction-numbids"><strong>Antal Bud: </strong></p>
                 <label for="auction-bidinput"><strong>Lägg ett bud:</strong></label>
                 <input id="auction-bidinput" type="number">
-                <button id="btn-bidsubmit">Lägg Bud</button>
+                <button id="btn-bidsubmit" class="btn-bid">Lägg Bud</button>
                 <p id="auction-bidmessage"></p>
             </div>
         </main>
