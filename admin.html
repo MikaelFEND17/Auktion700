@@ -1,52 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Auction - Admin</title>
+    <title>Auktion 700 - Admin</title>
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="style/style.css">
+    <script src="AuktionAdmin.js" defer></script>
 </head>
+
 <body>
 
-<!--
+    <!--
 
     Add Labels lul
 
--->
+    -->
 
-<h1>Skapa en Auktion</h1>
+    <div id="auction-create">
+        <h1>Skapa en Auktion</h1>
 
+        <div id="auction-message-create">
 
-<div id="error">
+        </div>
 
-</div>
-<strong>Titel:</strong>
-<br>
-<input type="text" id="auction-title" pattern=".{3,}" required title="Title minimum 3 characters">
-<br>
-<strong>Beskrivning:</strong>
-<br>
-<textarea id="auction-description" pattern=".{10,255}" required title="Description should be 10 to 255 characters">
-            </textarea>
-<br>
-<strong>Utropspris:</strong>
-<br>
-<input type="number" min="1" id="auction-startingprice">
-<br>
+        <strong>Titel:</strong>
+        <br>
+        <input type="text" id="auction-title" pattern=".{3,}" required title="Title minimum 3 characters">
+        <br>
+        <strong>Beskrivning:</strong>
+        <br>
+        <textarea id="auction-description" pattern=".{10,255}" required title="Description should be 10 to 255 characters">
+        </textarea>
+        <br>
+        <strong>Utropspris:</strong>
+        <br>
+        <input type="number" min="1" id="auction-startingprice">
+        <br>
 
-<strong>Start Datum</strong>
-<br>
-<input type="date" id="auction-datestart" disabled>
-<input type="time" id="auction-timestart" disabled>
-<br>
+        <strong>Start Datum</strong>
+        <br>
+        <input type="date" id="auction-datestart" disabled>
+        <input type="time" id="auction-timestart" disabled>
+        <br>
 
-<strong>Slut Datum</strong>
-<br>
-<input type="date" id="auction-dateend">
-<input type="time" id="auction-timeend">
-<br>
-<br>
-<button id="aution-create" class="w3-button w3-round-large w3-teal">Skapa Auktion</button>
+        <strong>Slut Datum</strong>
+        <br>
+        <input type="date" id="auction-dateend">
+        <input type="time" id="auction-timeend">
+        <br>
+        <br>
+        <button id="aution-create" class="w3-button w3-round-large w3-teal">Skapa Auktion</button>
+    </div>
+
+    <!--
+
+    -->
+
+    <div id="auction-list">
+
+        <h1>Ta bort en Auktion</h1>
+
+        <div id="auction-message-delete"> 
+
+        </div>
+        <select name="auctions" id="auctions-selectlist">
+
+        </select>
+        <button>Ta Bort Auktion</button>
+    </div>
 
 </body>
+
 </html>

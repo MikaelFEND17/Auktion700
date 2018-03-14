@@ -45,6 +45,38 @@ function AuctionClass()
         {
             console.log('Fetch Error :-S', err);
         })
+
+        
+        let auctionListNav = document.getElementById("auction-list-nav");
+        
+        let linkRefreshList = document.createElement("a");
+        let linkRefreshText = document.createTextNode("Uppdatera listan");
+        linkRefreshList.appendChild(linkRefreshText);
+        auctionListNav.appendChild(linkRefreshList);
+
+        
+        let spanSortBy = document.createElement("span");
+        let spanSortByText = document.createTextNode("- Sort By: ");
+        spanSortBy.appendChild(spanSortByText);
+        auctionListNav.appendChild(spanSortBy);
+
+        let linkSortByEndDate = document.createElement("a");
+        let linkSortByEndDateText = document.createTextNode("Slut Datum");
+        linkSortByEndDate.appendChild(linkSortByEndDateText);
+        linkSortByEndDate.setAttribute("href", function() { SortByEndDate(); } );
+        auctionListNav.appendChild(linkSortByEndDate);
+
+        let spanDivider = document.createElement("span");
+        let spanDividerText = document.createTextNode(" / ");
+        spanDivider.appendChild(spanDividerText);
+        auctionListNav.appendChild(spanDivider);
+
+        let linkSortByStartingPrice = document.createElement("a");
+        let linkSortByStartingPriceText = document.createTextNode("Utropspris");
+        linkSortByStartingPrice.appendChild(linkSortByStartingPriceText);
+        linkSortByStartingPrice.setAttribute("href", function() { SortByStartingPrice(); } );
+        auctionListNav.appendChild(linkSortByStartingPrice);
+
     }
 
     this.HandleAuctionData = function(aData)
@@ -82,7 +114,7 @@ function AuctionClass()
         divAuctionList.appendChild(divAuctionListItem);
     }
 
-    this.CheckBid = function(aAuktionID) //Set to 7 for now
+    this.CheckBid = function(aAuktionID)
     {
         console.log(aAuktionID);
         return;
@@ -109,9 +141,13 @@ function AuctionClass()
                         }
                     }).then(function (data) {
                         console.log('Request success: ', 'posten skapad');
-                        //Show user bid was posted. Update all bids.
+                        document.getElementById("auction-bidmessage").innerHTML = "Bid of amount: " + bidAmount + " was succesfully placed.";
                     })  
                 }
+            }
+            else
+            {
+                document.getElementById("auction-bidmessage").innerHTML = "Bid of amount: " + bidAmount + " was lower than highest bid (" + bidToMatch + ").";
             }
         }
     }
@@ -173,6 +209,8 @@ function AuctionClass()
 
     this.ShowAuction = function(aID)
     {
+        this.divAuctionDetails.remove("hide");
+
         let auction = this.GetAuction(aID);
         this.currentAuctionID = aID;
 
@@ -252,6 +290,24 @@ function Auction(aAuction)
             this.bids.push(newBid);
         }
     }
+
+    this.SortBids = function() 
+    {
+        if (this.bids.length > 0)
+        {
+            this.bids.sort(function(a, b) { return b.summa-a.summa; });
+        }
+    }
+
+    this.GetHighestBid = function()
+    {
+        if (this.bids.length > 0)
+        {
+           return this.bids[0].sum;
+        }
+
+        return 0; 
+    }
 }
 
 function Bid(aBidData)
@@ -259,4 +315,42 @@ function Bid(aBidData)
     this.bidID = aBidData.BudID;
     this.sum = aBidData.Summa;
     this.auctionID = aBidData.AuktionID;
+}
+
+function CreateCountdown(aEndTime, aElement)
+{
+    let countDownDate = new Date(aEndTime).getTime();
+
+    var x = setInterval(function() 
+    {
+
+        var now = new Date().getTime();
+        var distance = countDownDate - now;
+
+        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        aElement.innerHTML = "Countdown: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+        if (distance < 0) 
+        {
+            clearInterval(x);
+            element.innerHTML = "EXPIRED";
+        }
+    }, 1000);
+}
+
+
+//Dunno why but hey I did it this way...
+
+SortByEndDate()
+{
+    auctionClass.SortByEndDate();
+}
+
+SortByStartingPrice()
+{
+    auctionClass.SortByStartingPrice();
 }

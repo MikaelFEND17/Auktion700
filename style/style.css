@@ -1,0 +1,95 @@
+body
+{
+    background-color: #dcd0c0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #373737;
+    padding: 0;
+    margin: 0;
+}
+
+red 
+{
+    color: red;
+}
+
+header
+{
+    background-color: #f4f4f4;
+    width: 90%;
+    padding: 1em;
+    border-radius: 10px;
+    border: 2px solid #c0b283;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+main
+{
+    background-color: #f4f4f4;
+    width: 90%;
+    padding: 1em;
+    border-radius: 10px;
+    border: 2px solid #c0b283;
+    display: flex;
+    margin-top: 1em;
+}
+
+#wrapper
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 1em;
+}
+
+
+#auction-list 
+{
+    width: 50%;
+}
+
+#auction-list-nav
+{
+    width: 100%;
+}
+
+#auction-details 
+{
+    width: 50%;
+    padding-left: 2em;
+}
+
+.auction-listitem
+{
+   width: 100%; 
+   border: 1px solid #373737;
+}
+
+
+#logo
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#search
+{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hide
+{
+    display: none;
+}
+
+input[type=text]
+{
+    color: #373737;
+    border: 1px solid #c0b283;
+}
