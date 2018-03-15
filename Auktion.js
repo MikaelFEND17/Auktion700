@@ -114,17 +114,34 @@ class AuctionClass
         let divAuctionListItem = document.createElement("div");
         divAuctionListItem.setAttribute("class", "auction-listitem");
 
-        let auctionLink = document.createElement("a");
-        let auctionLinkTitle = document.createTextNode(aAuction.title);
-        auctionLink.appendChild(auctionLinkTitle);
-        auctionLink.addEventListener("click", () => auctionClass.ShowAuction(aAuction.auctionID));
-       
+        let divActionListItemName = document.createElement("div");
+        divActionListItemName.setAttribute("class", "auction-listitem-name");
+        divAuctionListItem.appendChild(divActionListItemName);
 
-        divAuctionListItem.appendChild(auctionLink);
+        let auctionTitle = document.createElement("span");
+        let auctionTitleText = document.createTextNode(aAuction.title);
+        auctionLink.appendChild(auctionTitleText);
+
+        let divActionListItemDate = document.createElement("div");
+        divActionListItemDate.setAttribute("class", "auction-listitem-date");
+        divAuctionListItem.appendChild(divActionListItemDate);
+
+        let auctionEndDate = document.createElement("span");
+        let auctionEndDateText = document.createTextNode(aAuction.endDate);
+        auctionEndDate.appendChild(auctionEndDateText);
+        
+        let divActionListItemPrice = document.createElement("div");
+        divActionListItemPrice.setAttribute("class", "auction-listitem-price");
+        divAuctionListItem.appendChild(divActionListItemPrice);
+
+        let auctionStartincPrice = document.createElement("span");
+        let auctionStartincPriceText = document.createTextNode(aAuction.startingPrice);
+        auctionStartincPrice.appendChild(auctionStartincPriceText);
 
         let linebreak = document.createElement("br");
         divAuctionListItem.appendChild(linebreak);
 
+        divAuctionListItem.addEventListener("click", () => auctionClass.ShowAuction(aAuction.auctionID));        
         divAuctionList.appendChild(divAuctionListItem);
     }
 
