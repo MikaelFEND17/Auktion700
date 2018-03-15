@@ -1,39 +1,44 @@
 let auctionClass = new AuctionClass();
 auctionClass.LoadAuctions();
 
-function AuctionClass()
+class AuctionClass
 {
-    this.auctionsURL = "https://nackowskis.azurewebsites.net/api/Auktion/700/";
-    this.bidsURL = "https://nackowskis.azurewebsites.net/api/Bud/700/";
-
-    this.auctions = new Array();
-
-    this.divAuctionList = document.getElementById("auction-list");
-    this.divAuctionDetails = document.getElementById("auction-details");
-
-    this.pID = document.getElementById("auction-id");
-    this.pTitle = document.getElementById("auction-title");
-    this.pDescription = document.getElementById("auction-description");
-    this.pStartDate = document.getElementById("auction-startdate");
-    this.pEndDate = document.getElementById("auction-enddate");
-    this.pCountDown = document.getElementById("auction-countdown");
-    this.pStartingPrice = document.getElementById("auction-startingprice");
-    this.pHighestBid = document.getElementById("auction-highestbid");
-    this.pNumBids = document.getElementById("auction-numbids");
-
-    this.btnBidSubmit = document.getElementById("btn-bidsubmit");
-
-    this.inputBid = document.getElementById("auction-bidinput");
-    this.inputSearch = document.getElementById("input-search");
+    constructor()
+    {
+        this.auctionsURL = "https://nackowskis.azurewebsites.net/api/Auktion/700/";
+        this.bidsURL = "https://nackowskis.azurewebsites.net/api/Bud/700/";
     
-    let btnSearch = document.getElementById("btn-search");
-    btnSearch.addEventListener("click", () => { auctionClass.Search(); } );
+        this.auctions = new Array();
+    
+        this.divAuctionList = document.getElementById("auction-list");
+        this.divAuctionDetails = document.getElementById("auction-details");
+    
+        this.pID = document.getElementById("auction-id");
+        this.pTitle = document.getElementById("auction-title");
+        this.pDescription = document.getElementById("auction-description");
+        this.pStartDate = document.getElementById("auction-startdate");
+        this.pEndDate = document.getElementById("auction-enddate");
+        this.pCountDown = document.getElementById("auction-countdown");
+        this.pStartingPrice = document.getElementById("auction-startingprice");
+        this.pHighestBid = document.getElementById("auction-highestbid");
+        this.pNumBids = document.getElementById("auction-numbids");
+    
+        this.btnBidSubmit = document.getElementById("btn-bidsubmit");
+    
+        this.inputBid = document.getElementById("auction-bidinput");
+        this.inputSearch = document.getElementById("input-search");
+        
+        let btnSearch = document.getElementById("btn-search");
+        btnSearch.addEventListener("click", () => { auctionClass.Search(); } );
+    
+        this.aLinkShowAllBids = document.getElementById("auction-showallbids");
+    
+        this.currentAuctionID = undefined;
+    
+        this.countdown = new CountDown();
+    }
 
-    this.currentAuctionID = undefined;
-
-    this.countdown = new CountDown();
-
-    this.LoadAuctions = function()
+    LoadAuctions()
     {
        fetch(this.auctionsURL).then(
             function (response) 
@@ -88,7 +93,7 @@ function AuctionClass()
 
     }
 
-    this.HandleAuctionData = function(aData)
+    HandleAuctionData(aData)
     {
         
         let divAuctionList = document.getElementById("auktion-list");
@@ -102,7 +107,7 @@ function AuctionClass()
         }
     }
 
-    this.PresentAuctionAsHTML = function(aAuction)
+    PresentAuctionAsHTML(aAuction)
     {
         let divAuctionList = document.getElementById("auction-list");
 
@@ -123,20 +128,26 @@ function AuctionClass()
         divAuctionList.appendChild(divAuctionListItem);
     }
 
-    this.CheckBid = function(aAuktionID)
+    CheckBid(aAuktionID)
     {
         console.log(aAuktionID);
-        return;
+
+        let auction = this.GetAuction(aAuktionID);
+
         let bidURL = "http://nackowskis.azurewebsites.net/api/Bud/700/";
-        let bidToMatch = 0;
-        let auktionID = aAuktionID; //This needs to be updated to valid ID dependentant on auction
+        let bidToMatch = auction.GetHighestBid();
+        let startingPrice = auction.GetStartingPrice()
     
         if (this.inputBid.value.length > 0)
         {
             let bidAmount = parseInt(this.inputBid.value);
             if (Number.isInteger(bidAmount) == true)
             {       
-                if (bidAmount > bidToMatch)
+                if (bidAmount < startingPrice)
+                {
+                    document.getElementById("auction-bidmessage").innerHTML = "Bid of amount: " + bidAmount + " was lower than starting bid (" + startingPrice + ").";
+                }
+                else if (bidAmount > bidToMatch)
                 {
                     let jsonData = { BudID: 0, Summa: bidAmount, AuktionID: auktionID };  
                     fetch(bidURL + auktionID,
@@ -151,27 +162,29 @@ function AuctionClass()
                     }).then(function (data) {
                         console.log('Request success: ', 'posten skapad');
                         document.getElementById("auction-bidmessage").innerHTML = "Bid of amount: " + bidAmount + " was succesfully placed.";
+
+                        
+                        auction.ClearBids();
+                        auction.LoadBids(this.bidsURL, this.pHighestBid);
+
+                        this.inputBid.value = "";
+                        
                     })  
                 }
-            }
-            else
-            {
-                document.getElementById("auction-bidmessage").innerHTML = "Bid of amount: " + bidAmount + " was lower than highest bid (" + bidToMatch + ").";
+                else
+                {
+                    document.getElementById("auction-bidmessage").innerHTML = "Bid of amount: " + bidAmount + " was lower than highest bid (" + bidToMatch + ").";
+                }
             }
         }
     }
 
-    this.DeleteAuction = function()
-    {
-        //No Code Yet
-    }
-
-    this.GetAuction = function(aID)
+    GetAuction(aID)
     {
         return this.auctions.find(auction => auction.auctionID === aID);
     }
 
-    this.ShowAuction = function(aID)
+    ShowAuction(aID)
     {
         this.divAuctionDetails.classList.remove("hide");
 
@@ -188,11 +201,11 @@ function AuctionClass()
         this.btnBidSubmit.parentNode.replaceChild(clone, this.btnBidSubmit);
         this.btnBidSubmit = clone;
 
-        auction.FillAuctionCard(this.pID, this.pTitle, this.pDescription, this.pStartDate, this.pEndDate, this.pCountDown, this.pStartingPrice, this.pHighestBid, this.pNumBids, this.btnBidSubmit, this.countdown);
+        auction.FillAuctionCard(this.pID, this.pTitle, this.pDescription, this.pStartDate, this.pEndDate, this.pCountDown, this.pStartingPrice, this.pHighestBid, this.pNumBids, this.btnBidSubmit, this.aLinkShowAllBids, this.countdown);
 
     }
 
-    this.SortByEndDate = function()
+    SortByEndDate()
     {
         this.auctions.sort(function(a, b) { return new Date(b.endDate).getTime() - new Date(a.endDate).getTime(); });
 
@@ -204,7 +217,7 @@ function AuctionClass()
         }
     }
 
-    this.SortByStartingPrice = function()
+    SortByStartingPrice()
     {
         this.auctions.sort(function(a, b) { return b.startingPrice - a.startingPrice; });
 
@@ -216,7 +229,7 @@ function AuctionClass()
         }
     }
 
-    this.Search = function()
+    Search()
     {
         let searchWord = this.inputSearch.value;
 
@@ -226,7 +239,7 @@ function AuctionClass()
         }
     }
 
-    this.ClearDOMChildrens = function(aElement) 
+    ClearDOMChildrens(aElement) 
     {
         while (aElement.firstChild) 
         {
@@ -237,18 +250,21 @@ function AuctionClass()
 }
 
 
-function Auction(aAuction)
+class Auction
 {
-    this.auctionID = aAuction.AuktionID;
-    this.title = aAuction.Titel;
-    this.description = aAuction.Beskrivning;
-    this.startDate = aAuction.StartDatum;
-    this.endDate = aAuction.SlutDatum;
-    this.startingPrice = aAuction.Utropspris;
-    this.grpCode = aAuction.Gruppkod;
-    this.bids = new Array();
+    constructor(aAuction)
+    {
+        this.auctionID = aAuction.AuktionID;
+        this.title = aAuction.Titel;
+        this.description = aAuction.Beskrivning;
+        this.startDate = aAuction.StartDatum;
+        this.endDate = aAuction.SlutDatum;
+        this.startingPrice = aAuction.Utropspris;
+        this.grpCode = aAuction.Gruppkod;
+        this.bids = new Array();
+    }
 
-    this.FillAuctionCard = function(aIDElement, aTitleElement, aDescElement, aStartDateElement, aEndDateElement, aCoundDownElement, aStartingPriceElement, aHighestBidElement, aNumBidsElement, aBidButton, aCountDown)
+    FillAuctionCard(aIDElement, aTitleElement, aDescElement, aStartDateElement, aEndDateElement, aCoundDownElement, aStartingPriceElement, aHighestBidElement, aNumBidsElement, aBidButton, aShowAllBidsLink , aCountDown)
     {
         aIDElement.innerHTML = "<strong>Auktion ID: </strong>" + this.auctionID;
         aTitleElement.innerHTML = "<strong>Titel: </strong>" + this.title;
@@ -258,6 +274,19 @@ function Auction(aAuction)
         aStartingPriceElement.innerHTML = "<strong>Utropspris: </strong>" + this.startingPrice;
         aHighestBidElement.innerHTML = "<strong>Högsta bud: </strong>" + this.GetHighestBid();
         aNumBidsElement.innerHTML = "<strong>Antal bud: </strong>" + this.bids.length;
+
+
+        var clone = aShowAllBidsLink.cloneNode();
+        while (aShowAllBidsLink.firstChild)
+        {
+          clone.appendChild(aShowAllBidsLink.lastChild);
+        }
+        aShowAllBidsLink.parentNode.replaceChild(clone, aShowAllBidsLink);
+        aShowAllBidsLink = clone;
+
+        aShowAllBidsLink.innerHTML = "Visa alla bud";
+        aShowAllBidsLink.addEventListener("click", () => { this.ShowAllBids() } );
+        
         
         aCountDown.StopCountDown();
         aCountDown.StartCountdown(this.endDate, aCoundDownElement);
@@ -277,12 +306,12 @@ function Auction(aAuction)
 
     }
 
-    this.ClearBids = function()
+    ClearBids()
     {
         this.bids = new Array();
     }
 
-    this.LoadBids = function(aBidsURL)
+    LoadBids(aBidsURL, aHighestBidElement)
     {
         fetch(aBidsURL + this.auctionID).then(
             function (response) 
@@ -303,7 +332,7 @@ function Auction(aAuction)
         });
     }
 
-    this.SaveBids = function(aData)
+    SaveBids(aData)
     {
         for (bid of aData)
         {
@@ -314,15 +343,17 @@ function Auction(aAuction)
         this.SortBids();
     }
 
-    this.SortBids = function() 
+    SortBids() 
     {
         if (this.bids.length > 0)
         {
             this.bids.sort(function(a, b) { return b.sum-a.sum; });
         }
+
+        this.UpdateHighestBid();
     }
 
-    this.GetHighestBid = function()
+    GetHighestBid()
     {
         if (this.bids.length > 0)
         {
@@ -332,25 +363,55 @@ function Auction(aAuction)
         return 0; 
     }
 
-    this.IsExpired = function()
+    GetStartingPrice()
+    {
+        return this.startingPrice;
+    }
+
+    IsExpired()
     {
         return (new Date(this.endDate).getTime() - new Date().getTime() <= 0);
     }
+
+    UpdateHighestBid()
+    {
+        let highestBidElement = document.getElementById("auction-highestbid");
+        highestBidElement.innerHTML = "<strong>Högsta bud: </strong>" + this.GetHighestBid();
+    }
+
+    ShowAllBids()
+    {
+        let pAllBids = document.getElementById("auction-allbids");
+        if (pAllBids !== null || pAllBids !== undefined)
+        {
+            pAllBids.innerHTML = "";
+            for (let bid of this.bids)
+            {
+                pAllBids.innerHTML += "<strong>BudID:</strong> " + bid.bidID + " <strong>Summa:</strong> " + bid.sum + "<br>";
+            }
+
+        }
+    }
 }
 
-function Bid(aBidData)
+class Bid
 {
-    this.bidID = aBidData.BudID;
-    this.sum = aBidData.Summa;
-    this.auctionID = aBidData.AuktionID;
+    constructor(aBidData)
+    {
+        this.bidID = aBidData.BudID;
+        this.sum = aBidData.Summa;
+        this.auctionID = aBidData.AuktionID;
+    }
 }
 
-
-function CountDown() 
+class CountDown 
 {
-    this.countdown = null;
+    constructor()
+    {
+        this.countdown = null;        
+    }
 
-    this.StartCountdown = function(aEndTime, aElement) 
+    StartCountdown(aEndTime, aElement) 
     {
         let countDownDate = new Date(aEndTime).getTime();
         let now = new Date().getTime();
@@ -381,7 +442,6 @@ function CountDown()
             let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-
             if (distance < 0) 
             {
                 clearInterval(this.countdown);
@@ -394,7 +454,7 @@ function CountDown()
         }, 1000);
     }
 
-    this.StopCountDown = function()
+    StopCountDown()
     {
         if (this.countdown !== null)
         {
@@ -403,16 +463,4 @@ function CountDown()
         }
     }
 
-}
-
-//Dunno why but hey I did it this way...
-
-function SortByEndDate()
-{
-    auctionClass.SortByEndDate();
-}
-
-function SortByStartingPrice()
-{
-    auctionClass.SortByStartingPrice();
 }

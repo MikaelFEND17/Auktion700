@@ -1,11 +1,14 @@
 let auctionAdmin = new AuctionAdmin();
 auctionAdmin.Initialize();
 
-function AuctionAdmin()
+class AuctionAdmin
 {
-    this.auctions = new Array();
+    constructor()
+    {
+        this.auctions = new Array();
+    }
 
-    this.Initialize = function()
+    Initialize()
     {
         let btnCreate = document.getElementById("aution-create");
         btnCreate.addEventListener("click", () => auctionAdmin.CreateAuction() );
@@ -14,12 +17,12 @@ function AuctionAdmin()
         btnDelete.addEventListener("click", () => auctionAdmin.DeleteAuction() );
     }
 
-    this.PopulateAuctionList = function()
+    PopulateAuctionList()
     {
 
     }
 
-    this.CreateAuction = function()
+    CreateAuction()
     {
         let titleMinLegth = 3;
         let descriptionLengthMin = 10;
@@ -64,12 +67,24 @@ function AuctionAdmin()
         })  
     }
 
-    this.DeleteAuction = function()
+    Delete()
     {
         console.log("Deleting auction ID: ");
 
         //Ta bort Bud
+        this.DeleteBids();
 
         //Ta bort Auktion
+        this.DeleteAuction();
+    }
+
+    DeleteBids()
+    {
+
+    }
+
+    DeleteAuction()
+    {
+
     }
 }
