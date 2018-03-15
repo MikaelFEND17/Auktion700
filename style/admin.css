@@ -1,0 +1,51 @@
+body
+{
+    background-color: #dcd0c0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #373737;
+    padding: 0;
+    margin: 0;
+}
+
+main
+{
+    display: flex;
+    width: 90%;
+    flex-wrap: flex;
+    padding: 1em;
+    justify-content: space-around;
+}
+
+h1
+{
+    text-decoration: underline;
+}
+
+#auction-create
+{
+    background-color: #f4f4f4;
+    width: 47%;
+    padding: 1em;
+    border: 2px solid #c0b283;
+}
+
+#auction-delete
+{
+    background-color: #f4f4f4;
+    width: 47%;
+    padding: 1em;
+    border: 2px solid #c0b283;
+}
+
+
+#auction-title
+{
+    width: 25em;
+}
+
+textarea
+{
+    width: 25em;
+    height: 5em;
+}

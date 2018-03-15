@@ -235,6 +235,11 @@ class AuctionClass
 
         if (searchWord > 0)
         {
+            let searchResult = this.auctions.filter((obj) => obj["titel"].toUpperCase().indexOf(searchWord.toUpperCase()) > -1 || obj["beskrivning"].toUpperCase().indexOf(searchWord.toUpperCase()) > -1); 
+            
+            //Rensa listan
+            
+            //Fyll på med Sökresultat
 
         }
     }
@@ -392,15 +397,6 @@ class Auction
             }
 
         }
-    }
-
-    Search()
-    {
-        let searchResult = this.auctions.filter((obj) => obj["titel"].toUpperCase().indexOf(searchWord.toUpperCase()) > -1 || obj["beskrivning"].toUpperCase().indexOf(searchWord.toUpperCase()) > -1); 
-
-        //Rensa listan
-
-        //Fyll på med Sökresultat
     }
 
     ShowAllAuctions()

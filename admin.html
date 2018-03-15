@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Auktion 700 - Admin</title>
     
-    <link rel="stylesheet" type="text/css" media="screen" href="style/style.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="style/admin.css">
     <script src="AuktionAdmin.js" defer></script>
 </head>
 
@@ -18,60 +18,60 @@
     Add Labels lul
 
     -->
-
-    <div id="auction-create">
-        <h1>Skapa en Auktion</h1>
-
-        <div id="auction-message-create">
-
+    <main>
+        <div id="auction-create">
+            <h1>Skapa en Auktion</h1>
+    
+            <div id="auction-message-create">
+    
+            </div>
+    
+            <strong>Titel:</strong>
+            <br>
+            <input type="text" id="auction-title" size="40" pattern=".{3,}" required title="Title minimum 3 characters">
+            <br> 
+            <strong>Beskrivning:</strong>
+            <br>
+            <textarea id="auction-description" pattern=".{10,255}" required title="Description should be 10 to 255 characters">
+            </textarea>
+            <br>
+            <strong>Utropspris:</strong>
+            <br>
+            <input type="number" min="1" value="0" align="right" id="auction-startingprice">
+            <br>
+    
+            <strong>Start Datum</strong>
+            <br>
+            <input type="date" id="auction-datestart" disabled>
+            <input type="time" id="auction-timestart" disabled>
+            <br>
+    
+            <strong>Slut Datum</strong>
+            <br>
+            <input type="date" id="auction-dateend">
+            <input type="time" id="auction-timeend">
+            <br>
+            <br>
+            <button id="aution-create" >Skapa Auktion</button>
         </div>
+    
+        <!--
+    
+        -->
+    
+        <div id="auction-delete">
+            <h1>Ta bort en Auktion</h1>
+    
+            <div id="auction-message-delete"> 
+    
+            </div>
+            <select name="auctions" id="auctions-selectlist">
+    
+            </select>
+            <button id="aution-delete">Ta Bort Auktion</button>
+        </div>    
+    </main>
 
-        <strong>Titel:</strong>
-        <br>
-        <input type="text" id="auction-title" pattern=".{3,}" required title="Title minimum 3 characters">
-        <br>
-        <strong>Beskrivning:</strong>
-        <br>
-        <textarea id="auction-description" pattern=".{10,255}" required title="Description should be 10 to 255 characters">
-        </textarea>
-        <br>
-        <strong>Utropspris:</strong>
-        <br>
-        <input type="number" min="1" id="auction-startingprice">
-        <br>
-
-        <strong>Start Datum</strong>
-        <br>
-        <input type="date" id="auction-datestart" disabled>
-        <input type="time" id="auction-timestart" disabled>
-        <br>
-
-        <strong>Slut Datum</strong>
-        <br>
-        <input type="date" id="auction-dateend">
-        <input type="time" id="auction-timeend">
-        <br>
-        <br>
-        <button id="aution-create" >Skapa Auktion</button>
-    </div>
-
-    <!--
-
-    -->
-
-    <div id="auction-list">
-
-        <h1>Ta bort en Auktion</h1>
-
-        <div id="auction-message-delete"> 
-
-        </div>
-        <select name="auctions" id="auctions-selectlist">
-
-        </select>
-        <button id="aution-delete">Ta Bort Auktion</button>
-    </div>
-
+    
 </body>
-
 </html>

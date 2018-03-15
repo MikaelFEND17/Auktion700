@@ -1,11 +1,22 @@
-let auctionAdmin = new AuctionAdmin();
-auctionAdmin.Initialize();
+class Auction
+{
+    constructor(aData)
+    {
+        this.title = aData.Titel;
+        this.auctionID = aData.AuktionID;
+    }
+}
 
 class AuctionAdmin
 {
     constructor()
-    {
+    {    
+        this.auctionsURL = "https://nackowskis.azurewebsites.net/api/Auktion/700/";
+        this.bidsURL = "https://nackowskis.azurewebsites.net/api/Bud/700/";
+
         this.auctions = new Array();
+
+        this.selectListDelete = document.getElementById("auctions-selectlist");
     }
 
     Initialize()
@@ -15,11 +26,47 @@ class AuctionAdmin
 
         let btnDelete = document.getElementById("aution-delete"); 
         btnDelete.addEventListener("click", () => auctionAdmin.DeleteAuction() );
+
+        this.LoadAuctions();
     }
 
-    PopulateAuctionList()
+    LoadAuctions()
     {
+        fetch(this.auctionsURL).then(
+            function (response) 
+            {
+                if (response.status !== 200) 
+                {
+                    console.log('Looks like there was a problem. Status Code: ' + response.status);
+                    return;
+                }
 
+                response.json().then(
+                    data => this.HandleAuctionData(data)
+                );
+            }.bind(this)
+        ).catch(function (err) 
+        {
+            console.log('Fetch Error :-S', err);
+        })
+    }
+
+    HandleAuctionData(aData)
+    {
+        let select
+        for (let auction of aData)
+        {
+            let newAuction = new Auction(auction);
+            this.auctions.push(newAuction); 
+
+            this.PopulateAuctionList(newAuction);
+        }
+    }
+
+    PopulateAuctionList(aAuction)
+    {
+        let option = new Option(aAuction.title, aAuction.id);
+        this.selectListDelete.appendChild(option);
     }
 
     CreateAuction()
@@ -88,3 +135,6 @@ class AuctionAdmin
 
     }
 }
+
+let auctionAdmin = new AuctionAdmin();
+auctionAdmin.Initialize();
