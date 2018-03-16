@@ -13,11 +13,6 @@
 
 <body>
 
-    <!--
-
-    Add Labels lul
-
-    -->
     <main>
         <div id="auction-create">
             <h1>Skapa en Auktion</h1>
@@ -26,7 +21,7 @@
     
             </div>
     
-            <strong>Titel:</strong>
+            <label for="auction-title"><strong>Titel:</strong></label>
             <br>
             <input type="text" id="auction-title" size="40" pattern=".{3,}" required title="Title minimum 3 characters">
             <br> 
@@ -35,30 +30,25 @@
             <textarea id="auction-description" pattern=".{10,255}" required title="Description should be 10 to 255 characters">
             </textarea>
             <br>
-            <strong>Utropspris:</strong>
+            <label for="auction-startingprice"><strong>Utropspris:</strong></label>
             <br>
             <input type="number" min="1" value="0" align="right" id="auction-startingprice">
             <br>
     
-            <strong>Start Datum</strong>
+            <label for="auction-datetimestart"><strong>Start Datum</strong></label>
             <br>
-            <input type="date" id="auction-datestart" disabled>
-            <input type="time" id="auction-timestart" disabled>
+            <input type="datetime-local" id="auction-datetimestart" disabled>
             <br>
     
-            <strong>Slut Datum</strong>
+            <label for="auction-dateend"><strong>Slut Datum</strong></label>
             <br>
             <input type="date" id="auction-dateend">
             <input type="time" id="auction-timeend">
             <br>
             <br>
-            <button id="aution-create" >Skapa Auktion</button>
+            <button id="aution-create">Skapa Auktion</button>
         </div>
-    
-        <!--
-    
-        -->
-    
+        
         <div id="auction-delete">
             <h1>Ta bort en Auktion</h1>
     

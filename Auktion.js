@@ -1,6 +1,3 @@
-let auctionClass = new AuctionClass();
-auctionClass.LoadAuctions();
-
 class AuctionClass
 {
     constructor()
@@ -12,6 +9,7 @@ class AuctionClass
     
         this.divAuctionList = document.getElementById("auction-list");
         this.divAuctionDetails = document.getElementById("auction-details");
+        this.divSearch = document.getElementById("auction-searchbox");
     
         this.pID = document.getElementById("auction-id");
         this.pTitle = document.getElementById("auction-title");
@@ -21,6 +19,7 @@ class AuctionClass
         this.pCountDown = document.getElementById("auction-countdown");
         this.pStartingPrice = document.getElementById("auction-startingprice");
         this.pHighestBid = document.getElementById("auction-highestbid");
+        this.pAllBids = document.getElementById("auction-allbids");
         this.pNumBids = document.getElementById("auction-numbids");
     
         this.btnBidSubmit = document.getElementById("btn-bidsubmit");
@@ -118,9 +117,10 @@ class AuctionClass
         divActionListItemName.setAttribute("class", "auction-listitem-name");
         divAuctionListItem.appendChild(divActionListItemName);
 
-        let auctionTitle = document.createElement("span");
+        let auctionTitle = document.createElement("strong");
         let auctionTitleText = document.createTextNode(aAuction.title);
-        auctionLink.appendChild(auctionTitleText);
+        auctionTitle.appendChild(auctionTitleText);
+        divActionListItemName.appendChild(auctionTitle);
 
         let divActionListItemDate = document.createElement("div");
         divActionListItemDate.setAttribute("class", "auction-listitem-date");
@@ -129,14 +129,16 @@ class AuctionClass
         let auctionEndDate = document.createElement("span");
         let auctionEndDateText = document.createTextNode(aAuction.endDate);
         auctionEndDate.appendChild(auctionEndDateText);
+        divActionListItemDate.appendChild(auctionEndDate);
         
         let divActionListItemPrice = document.createElement("div");
         divActionListItemPrice.setAttribute("class", "auction-listitem-price");
         divAuctionListItem.appendChild(divActionListItemPrice);
 
-        let auctionStartincPrice = document.createElement("span");
-        let auctionStartincPriceText = document.createTextNode(aAuction.startingPrice);
+        let auctionStartincPrice = document.createElement("strong");
+        let auctionStartincPriceText = document.createTextNode(aAuction.startingPrice + " kr");
         auctionStartincPrice.appendChild(auctionStartincPriceText);
+        divActionListItemPrice.appendChild(auctionStartincPrice);
 
         let linebreak = document.createElement("br");
         divAuctionListItem.appendChild(linebreak);
@@ -218,13 +220,23 @@ class AuctionClass
         this.btnBidSubmit.parentNode.replaceChild(clone, this.btnBidSubmit);
         this.btnBidSubmit = clone;
 
+        this.ClearDOMChildrens(this.pAllBids);
+
+        var clone = this.aLinkShowAllBids.cloneNode();
+        while (this.aLinkShowAllBids.firstChild)
+        {
+          clone.appendChild(this.aLinkShowAllBids.lastChild);
+        }
+        this.aLinkShowAllBids.parentNode.replaceChild(clone, this.aLinkShowAllBids);
+        this.aLinkShowAllBids = clone;
+
         auction.FillAuctionCard(this.pID, this.pTitle, this.pDescription, this.pStartDate, this.pEndDate, this.pCountDown, this.pStartingPrice, this.pHighestBid, this.pNumBids, this.inputBid, this.btnBidSubmit, this.aLinkShowAllBids, this.countdown);
 
     }
 
     SortByEndDate()
     {
-        this.auctions.sort(function(a, b) { return new Date(b.endDate).getTime() - new Date(a.endDate).getTime(); });
+        this.auctions.sort(function(a, b) { return new Date(a.endDate).getTime() - new Date(b.endDate).getTime(); });
 
         this.ClearDOMChildrens(this.divAuctionList);
 
@@ -236,7 +248,7 @@ class AuctionClass
 
     SortByStartingPrice()
     {
-        this.auctions.sort(function(a, b) { return b.startingPrice - a.startingPrice; });
+        this.auctions.sort(function(a, b) { return a.startingPrice - b.startingPrice; });
 
         this.ClearDOMChildrens(this.divAuctionList);
 
@@ -250,13 +262,35 @@ class AuctionClass
     {
         let searchWord = this.inputSearch.value;
 
-        if (searchWord > 0)
+        if (searchWord.length > 0)
         {
-            let searchResult = this.auctions.filter((obj) => obj["titel"].toUpperCase().indexOf(searchWord.toUpperCase()) > -1 || obj["beskrivning"].toUpperCase().indexOf(searchWord.toUpperCase()) > -1); 
+            console.log(searchWord);
+            let searchResult = this.auctions.filter((obj) => obj["title"].toUpperCase().indexOf(searchWord.toUpperCase()) > -1 || obj["description"].toUpperCase().indexOf(searchWord.toUpperCase()) > -1); 
             
             //Rensa listan
+            this.ClearDOMChildrens(this.divAuctionList);
             
             //Fyll på med Sökresultat
+            for (let auction of searchResult)
+            {
+                this.PresentAuctionAsHTML(auction);
+            }
+
+            let searchText = document.createElement("span");
+            searchText.innerHTML += "<strong>Search results for:</strong> " + searchWord + " (<strong>Total:</strong> " + searchResult.length + ")";
+
+            this.divSearch.appendChild(searchText);
+
+            let linebreak = document.createElement("br");
+            this.divSearch.appendChild(linebreak);
+
+            let linkShowAll = document.createElement("a");
+            let linkShowAllText = document.createTextNode("Visa alla");
+            linkShowAll.setAttribute("href", "javascript:void(0)" );
+            linkShowAll.appendChild(linkShowAllText);
+            linkShowAll.addEventListener("click", () => this.ShowAllAuctions());
+
+            this.divSearch.appendChild(linkShowAll);
 
         }
     }
@@ -269,8 +303,17 @@ class AuctionClass
         }
     }
 
-}
+    ShowAllAuctions()
+    {
+        this.ClearDOMChildrens(this.divSearch);
+        this.ClearDOMChildrens(this.divAuctionList);
 
+        for (let auction of this.auctions)
+        {
+            this.PresentAuctionAsHTML(auction);
+        }
+    }
+}
 
 class Auction
 {
@@ -296,15 +339,6 @@ class Auction
         aStartingPriceElement.innerHTML = "<strong>Utropspris: </strong>" + this.startingPrice;
         aHighestBidElement.innerHTML = "<strong>Högsta bud: </strong>" + this.GetHighestBid();
         aNumBidsElement.innerHTML = "<strong>Antal bud: </strong>" + this.bids.length;
-
-
-        var clone = aShowAllBidsLink.cloneNode();
-        while (aShowAllBidsLink.firstChild)
-        {
-          clone.appendChild(aShowAllBidsLink.lastChild);
-        }
-        aShowAllBidsLink.parentNode.replaceChild(clone, aShowAllBidsLink);
-        aShowAllBidsLink = clone;
 
         aShowAllBidsLink.innerHTML = "Visa alla bud";
         aShowAllBidsLink.addEventListener("click", () => { this.ShowAllBids() } );
@@ -357,7 +391,7 @@ class Auction
 
     SaveBids(aData)
     {
-        for (bid of aData)
+        for (let bid of aData)
         {
             let newBid = new Bid(bid);
             this.bids.push(newBid);
@@ -414,11 +448,6 @@ class Auction
             }
 
         }
-    }
-
-    ShowAllAuctions()
-    {
-        console.log("DO THIS CODE");
     }
 }
 
@@ -490,5 +519,7 @@ class CountDown
             this.countdown = null;
         }
     }
-
 }
+
+let auctionClass = new AuctionClass();
+auctionClass.LoadAuctions();

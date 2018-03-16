@@ -25,9 +25,23 @@ class AuctionAdmin
         btnCreate.addEventListener("click", () => auctionAdmin.CreateAuction() );
 
         let btnDelete = document.getElementById("aution-delete"); 
-        btnDelete.addEventListener("click", () => auctionAdmin.DeleteAuction() );
+        btnDelete.addEventListener("click", () => auctionAdmin.Delete() );
 
         this.LoadAuctions();
+
+        let startDateTime = document.getElementById("auction-datetimestart"); 
+        
+        let dateNow = new Date();  
+        startDateTime.value = new Date(dateNow.getTime() - dateNow.getTimezoneOffset() * 60000).toISOString().substring(0, 19);
+           
+        let endDate = document.getElementById("auction-dateend"); 
+        endDate.value = new Date(dateNow.getTime() - dateNow.getTimezoneOffset() * 60000).toISOString().substring(0, 10);
+        console.log(new Date(dateNow.getTime() - dateNow.getTimezoneOffset() * 60000).toISOString().substring(0, 10));
+
+        let endTime = document.getElementById("auction-timeend"); 
+        endTime.value = new Date(dateNow.getTime() - dateNow.getTimezoneOffset() * 60000).toISOString().substring(11, 16);
+        console.log(new Date(dateNow.getTime() - dateNow.getTimezoneOffset() * 60000).toISOString().substring(11, 16));
+
     }
 
     LoadAuctions()
@@ -65,7 +79,7 @@ class AuctionAdmin
 
     PopulateAuctionList(aAuction)
     {
-        let option = new Option(aAuction.title, aAuction.id);
+        let option = new Option(aAuction.title, aAuction.auctionID);
         this.selectListDelete.appendChild(option);
     }
 
@@ -73,8 +87,6 @@ class AuctionAdmin
     {
         let titleMinLegth = 3;
         let descriptionLengthMin = 10;
-    
-        let auctionURL = "http://nackowskis.azurewebsites.net/api/Auktion/700/";
     
         let auctionTitle = skapaTitel.value;
         let auctionDescription = "";
@@ -114,27 +126,83 @@ class AuctionAdmin
         })  
     }
 
-    Delete()
+    async Delete()
     {
-        console.log("Deleting auction ID: ");
+        console.log("Deleting auction ID: " +  this.selectListDelete.value);
 
         //Ta bort Bud
-        this.DeleteBids();
+        let response1 = await this.DeleteBids(this.selectListDelete.value);
 
         //Ta bort Auktion
-        this.DeleteAuction();
+        let response2 = await this.DeleteAuction(this.selectListDelete.value);
+
+        
+
+        console.log(response1);
+        //console.log(response2);
     }
 
-    DeleteBids()
+    async DeleteBids(aID)
     {
-
+        return fetch(this.bidsURL + aID,
+            {
+                method: 'DELETE',
+                body: JSON.stringify({}),
+                headers: 
+                {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                }
+            }).then(
+                function (response) 
+                {
+                    if (response.status !== 200) 
+                    {
+                        console.log('Looks like there was a problem. Status Code: ' + response.status);
+                        return;
+                    }
+    
+                    response.json().then(
+                        console.log(data)
+                    );
+                }.bind(this)
+            ).catch(function (err) 
+            {
+                console.log('Fetch Error :-S', err);
+            })
     }
 
-    DeleteAuction()
+    async DeleteAuction(aID)
     {
-
+        return fetch(this.auctionsURL + aID,
+            {
+                method: 'DELETE',
+                body: JSON.stringify({}),
+                headers: 
+                {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                }
+            }).then(
+                function (response) 
+                {
+                    if (response.status !== 200) 
+                    {
+                        console.log('Looks like there was a problem. Status Code: ' + response.status);
+                        return;
+                    }
+    
+                    response.json().then(
+                        console.log(data)
+                    );
+                }.bind(this)
+            ).catch(function (err) 
+            {
+                console.log('Fetch Error :-S', err);
+            })
     }
 }
 
 let auctionAdmin = new AuctionAdmin();
 auctionAdmin.Initialize();
+

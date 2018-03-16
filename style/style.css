@@ -70,6 +70,12 @@ main
     padding-left: 2em;
 }
 
+#auction-searchbox 
+{
+    width: 100%;
+    padding: 1em;
+}
+
 .auction-listitem
 {
    width: 100%; 
@@ -88,17 +94,16 @@ main
 
 .auction-listitem-date
 {
-    width: 70%;
+    width: 75%;
     display: flex;
-    padding: 1em;
+    padding: 0.5em 0em;
 }
 
 .auction-listitem-price
 {
-    width: 30%;
+    width: 25%;
     display: flex;
     justify-content: flex-end;
-    padding: 1em;
 }
 
 
@@ -114,6 +119,7 @@ main
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
 }
 
 .hide
@@ -148,4 +154,14 @@ input[type=text]
 a
 {
     color: #373737;
+}
+
+.blackbottomborder
+{
+    border-bottom: 1px solid #373737;
+}
+
+.label-search
+{
+    margin-right: 0.5em;
 }
