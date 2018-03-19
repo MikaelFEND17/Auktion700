@@ -1,6 +1,3 @@
 Skapa Ny auktion
 Lägg bud
-Sökning
-Countdown
 Ej lägga bud efter expired.
-Sortera Auktioner

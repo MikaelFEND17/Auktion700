@@ -168,8 +168,8 @@ class AuctionClass
                 }
                 else if (bidAmount > bidToMatch)
                 {
-                    let jsonData = { BudID: 0, Summa: bidAmount, AuktionID: auktionID };  
-                    fetch(bidURL + auktionID,
+                    let jsonData = { BudID: 0, Summa: bidAmount, AuktionID: auction.auctionID };  
+                    fetch(bidURL + auction.auctionID,
                     {
                         method: 'POST',
                         body: JSON.stringify(jsonData),
@@ -188,7 +188,7 @@ class AuctionClass
 
                         this.inputBid.value = "";
                         
-                    })  
+                    }.bind(this)) 
                 }
                 else
                 {
@@ -434,6 +434,8 @@ class Auction
     {
         let highestBidElement = document.getElementById("auction-highestbid");
         highestBidElement.innerHTML = "<strong>Högsta bud: </strong>" + this.GetHighestBid();
+        let numBidsElement = document.getElementById("auction-numbids");
+        numBidsElement.innerHTML = "<strong>Antal bud: </strong>" + this.bids.length;
     }
 
     ShowAllBids()

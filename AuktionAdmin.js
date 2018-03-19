@@ -36,11 +36,9 @@ class AuctionAdmin
            
         let endDate = document.getElementById("auction-dateend"); 
         endDate.value = new Date(dateNow.getTime() - dateNow.getTimezoneOffset() * 60000).toISOString().substring(0, 10);
-        console.log(new Date(dateNow.getTime() - dateNow.getTimezoneOffset() * 60000).toISOString().substring(0, 10));
 
         let endTime = document.getElementById("auction-timeend"); 
         endTime.value = new Date(dateNow.getTime() - dateNow.getTimezoneOffset() * 60000).toISOString().substring(11, 16);
-        console.log(new Date(dateNow.getTime() - dateNow.getTimezoneOffset() * 60000).toISOString().substring(11, 16));
 
     }
 
@@ -87,31 +85,41 @@ class AuctionAdmin
     {
         let titleMinLegth = 3;
         let descriptionLengthMin = 10;
+        let timezoneOffset = (new Date()).getTimezoneOffset() * 60000;;
     
-        let auctionTitle = skapaTitel.value;
-        let auctionDescription = "";
-        let auctionStartDate = "2018-03-10T00:00:00";
-        let auctionEndDate = "2018-03-17T00:00:00";1
+        let auctionTitle = document.getElementById("auction-title").value;
+        let auctionDescription = document.getElementById("auction-description").value;
+        let auctionStartDate = new Date(Date.now() - timezoneOffset).toISOString().slice(0, -5);
+        let auctionEndDate = new Date(Date.now() - timezoneOffset);
         let auctionGroupCode = 700;
-        let auctionStartingPrice = skapaUtropspris;
+        let auctionStartingPrice = document.getElementById("auction-startingprice").value;
     
-        let auctionTitleLength = auctionTitle.value.length > titleMinLegth;
-        let auctionDescruptionLength = auctionDescription.value.length > descriptionLengthMin;
+        let auctionTitleLength = auctionTitle.length > titleMinLegth;
+        let auctionDescruptionLength = auctionDescription.length > descriptionLengthMin;
         let startingPriceAboveZero = auctionStartingPrice > 0;
     
         if (!auctionTitleLength || !auctionDescruptionLength || !startingPriceAboveZero)
         {
-            skapaError = "<strong class='red'>ERROR: </strong><span class='red'>"
+            let createError = document.getElementById("auction-message-create");
+            createError.innerHTML = "<strong class='red'>ERROR: </strong><span class='red'>"
     
-            if (!auctionTitleLength) { skapaError += "Title should be minimum " + titleMinLegth + " characters <br>"; }
-            if (!auctionDescruptionLength) { skapaError += "Description should be minimum " + descriptionLengthMin + " characters <br>"; }
-            if (!startingPriceAboveZero) { skapaError += "Starting price must be above 0. <br>"; }
+            if (!auctionTitleLength) { createError.innerHTML += "Title should be minimum " + titleMinLegth + " characters <br>"; }
+            if (!auctionDescruptionLength) { createError.innerHTML += "Description should be minimum " + descriptionLengthMin + " characters <br>"; }
+            if (!startingPriceAboveZero) { createError.innerHTML += "Starting price must be above 0. <br>"; }
     
+            console.log("ERROR!");
+
             return;
         }
+        
+        auctionEndDate.setFullYear(document.getElementById("auction-dateend").value.substring(0, 4));
+        auctionEndDate.setMonth(document.getElementById("auction-dateend").value.substring(5, 7)-1);
+        auctionEndDate.setDate(document.getElementById("auction-dateend").value.substring(8, 10));
+        auctionEndDate.setHours(document.getElementById("auction-timeend").value.substring(0, 2));
+        auctionEndDate.setMinutes(document.getElementById("auction-timeend").value.substring(3, 5));
     
-        let jsonData = { AuktionID: 0, Titel: auctionTitle, Beskrivning: auctionDescription, StartDatum: 0, SlutDatum: 0, GruppKod: auctionGroupCode, Utropspris: auctionStartingPrice };  
-        fetch(auctionURL,
+        let jsonData = { AuktionID: 0, Titel: auctionTitle, Beskrivning: auctionDescription, StartDatum: auctionStartDate, SlutDatum: auctionEndDate.toISOString().slice(0, -5), GruppKod: auctionGroupCode, Utropspris: auctionStartingPrice };  
+        fetch(this.auctionsURL,
             {
                 method: 'POST',
                 body: JSON.stringify(jsonData),
@@ -122,7 +130,9 @@ class AuctionAdmin
                 }
             }).then(function (data) {
                 console.log('Request success: ', 'posten skapad');
-                //Show something somewhere that says we added an auction.
+                
+                let createError = document.getElementById("auction-message-create");
+                createError.innerHTML = "<strong>Auction added.</strong>";
         })  
     }
 
@@ -136,40 +146,15 @@ class AuctionAdmin
         //Ta bort Auktion
         let response2 = await this.DeleteAuction(this.selectListDelete.value);
 
-        
-
         console.log(response1);
-        //console.log(response2);
     }
 
     async DeleteBids(aID)
     {
-        return fetch(this.bidsURL + aID,
-            {
-                method: 'DELETE',
-                body: JSON.stringify({}),
-                headers: 
-                {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                }
-            }).then(
-                function (response) 
-                {
-                    if (response.status !== 200) 
-                    {
-                        console.log('Looks like there was a problem. Status Code: ' + response.status);
-                        return;
-                    }
-    
-                    response.json().then(
-                        console.log(data)
-                    );
-                }.bind(this)
-            ).catch(function (err) 
-            {
-                console.log('Fetch Error :-S', err);
-            })
+        return fetch(this.bidsURL + aID, {
+                method: 'DELETE'
+              })
+              .then(response => response.json());
     }
 
     async DeleteAuction(aID)
@@ -186,7 +171,7 @@ class AuctionAdmin
             }).then(
                 function (response) 
                 {
-                    if (response.status !== 200) 
+                    if (response.status !== 200 || response.status !== 204) 
                     {
                         console.log('Looks like there was a problem. Status Code: ' + response.status);
                         return;
