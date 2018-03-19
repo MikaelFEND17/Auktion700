@@ -147,14 +147,14 @@ class AuctionAdmin
         let response2 = await this.DeleteAuction(this.selectListDelete.value);
 
         console.log(response1);
+        console.log(response2);
     }
 
     async DeleteBids(aID)
     {
         return fetch(this.bidsURL + aID, {
                 method: 'DELETE'
-              })
-              .then(response => response.json());
+              });
     }
 
     async DeleteAuction(aID)
@@ -162,29 +162,13 @@ class AuctionAdmin
         return fetch(this.auctionsURL + aID,
             {
                 method: 'DELETE',
-                body: JSON.stringify({}),
                 headers: 
                 {
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json'
-                }
-            }).then(
-                function (response) 
-                {
-                    if (response.status !== 200 || response.status !== 204) 
-                    {
-                        console.log('Looks like there was a problem. Status Code: ' + response.status);
-                        return;
-                    }
-    
-                    response.json().then(
-                        console.log(data)
-                    );
-                }.bind(this)
-            ).catch(function (err) 
-            {
-                console.log('Fetch Error :-S', err);
-            })
+                },
+                body: JSON.stringify({})
+            });
     }
 }
 
