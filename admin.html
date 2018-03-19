@@ -14,7 +14,26 @@
 <body>
 
     <main>
-        <div id="auction-create">
+        <div id="auction-login">
+            <h1>Login</h1>
+    
+            <div id="auction-login-message">
+    
+            </div>
+    
+            <label for="auction-username"><strong>Användarnamn:</strong></label>
+            <br>
+            <input type="text" id="auction-username" size="40">
+            <br>
+            <label for="auction-password"><strong>Password:</strong></label>
+            <br>
+            <input type="password" id="auction-password" size="40">
+            <br>
+            <br>
+            <button id="auction-button-login">Logga in</button>
+
+        </div>
+        <div id="auction-create" class="hide">
             <h1>Skapa en Auktion</h1>
     
             <div id="auction-message-create">
@@ -31,12 +50,12 @@
             <br>
             <label for="auction-startingprice"><strong>Utropspris:</strong></label>
             <br>
-            <input type="number" min="1" value="0" align="right" id="auction-startingprice">
+            <input type="number" min="1" value="1" align="right" id="auction-startingprice">
             <br>
     
             <label for="auction-datetimestart"><strong>Start Datum</strong></label>
             <br>
-            <input type="datetime-local" id="auction-datetimestart" disabled>
+            <input type="datetime-local" id="auction-datetimestart" size="40" disabled>
             <br>
     
             <label for="auction-dateend"><strong>Slut Datum</strong></label>
@@ -45,10 +64,10 @@
             <input type="time" id="auction-timeend">
             <br>
             <br>
-            <button id="aution-create">Skapa Auktion</button>
+            <button id="auction-button-create">Skapa Auktion</button>
         </div>
         
-        <div id="auction-delete">
+        <div id="auction-delete" class="hide">
             <h1>Ta bort en Auktion</h1>
     
             <div id="auction-message-delete"> 
@@ -57,7 +76,7 @@
             <select name="auctions" id="auctions-selectlist">
     
             </select>
-            <button id="aution-delete">Ta Bort Auktion</button>
+            <button id="auction-button-delete">Ta Bort Auktion</button>
         </div>    
     </main>
 
