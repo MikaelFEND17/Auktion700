@@ -334,8 +334,8 @@ class Auction
         aIDElement.innerHTML = "<strong>Auktion ID: </strong>" + this.auctionID;
         aTitleElement.innerHTML = "<strong>Titel: </strong>" + this.title;
         aDescElement.innerHTML = "<strong>Beskrivning: </strong>" + this.description;
-        aStartDateElement.innerHTML = "<strong>Start Datum: </strong>" + this.startDate;
-        aEndDateElement.innerHTML = "<strong>Slut Datum: </strong>" + this.endDate;
+        aStartDateElement.innerHTML = "<strong>Start Datum: </strong>" + this.startDate.replace("T"," "); //Remove the T from IsoString
+        aEndDateElement.innerHTML = "<strong>Slut Datum: </strong>" + this.endDate.replace("T"," "); //Remove the T from IsoString
         aStartingPriceElement.innerHTML = "<strong>Utropspris: </strong>" + this.startingPrice;
         aHighestBidElement.innerHTML = "<strong>Högsta bud: </strong>" + this.GetHighestBid();
         aNumBidsElement.innerHTML = "<strong>Antal bud: </strong>" + this.bids.length;

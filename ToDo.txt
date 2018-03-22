@@ -1,3 +1,0 @@
-Skapa Ny auktion
-Lägg bud
-Ej lägga bud efter expired.

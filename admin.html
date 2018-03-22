@@ -12,73 +12,91 @@
 </head>
 
 <body>
-
-    <main>
-        <div id="auction-login">
-            <h1>Login</h1>
-    
-            <div id="auction-login-message">
-    
-            </div>
-    
-            <label for="auction-username"><strong>Användarnamn:</strong></label>
-            <br>
-            <input type="text" id="auction-username" size="40">
-            <br>
-            <label for="auction-password"><strong>Password:</strong></label>
-            <br>
-            <input type="password" id="auction-password" size="40">
-            <br>
-            <br>
-            <button id="auction-button-login">Logga in</button>
-
-        </div>
-        <div id="auction-create" class="hide">
-            <h1>Skapa en Auktion</h1>
-    
-            <div id="auction-message-create">
-    
-            </div>
-    
-            <label for="auction-title"><strong>Titel:</strong></label>
-            <br>
-            <input type="text" id="auction-title" size="40" pattern=".{3,}" required title="Title minimum 3 characters">
-            <br> 
-            <strong>Beskrivning:</strong>
-            <br>
-            <textarea id="auction-description" pattern=".{10,255}" required title="Description should be 10 to 255 characters"></textarea>
-            <br>
-            <label for="auction-startingprice"><strong>Utropspris:</strong></label>
-            <br>
-            <input type="number" min="1" value="1" align="right" id="auction-startingprice">
-            <br>
-    
-            <label for="auction-datetimestart"><strong>Start Datum</strong></label>
-            <br>
-            <input type="datetime-local" id="auction-datetimestart" size="40" disabled>
-            <br>
-    
-            <label for="auction-dateend"><strong>Slut Datum</strong></label>
-            <br>
-            <input type="date" id="auction-dateend">
-            <input type="time" id="auction-timeend">
-            <br>
-            <br>
-            <button id="auction-button-create">Skapa Auktion</button>
-        </div>
+        <div id="wrapper">
+            <header>
+                <div id="logo">
+                    <h1>NACKOWSKI ADMIN</h1>
+                </div>
+            </header>
+            <main>
+                <div id="auction-login">
+                    <h1>Login</h1>
         
-        <div id="auction-delete" class="hide">
-            <h1>Ta bort en Auktion</h1>
-    
-            <div id="auction-message-delete"> 
-    
-            </div>
-            <select name="auctions" id="auctions-selectlist">
-    
-            </select>
-            <button id="auction-button-delete">Ta Bort Auktion</button>
-        </div>    
-    </main>
+                    <div id="auction-login-message">
+        
+                    </div>
+        
+                    <label for="auction-username">
+                        <strong>Användarnamn:</strong>
+                    </label>
+                    <br>
+                    <input type="text" id="auction-username" size="40">
+                    <br>
+                    <label for="auction-password">
+                        <strong>Password:</strong>
+                    </label>
+                    <br>
+                    <input type="password" id="auction-password" size="40">
+                    <br>
+                    <br>
+                    <button id="auction-button-login">Logga in</button>
+        
+                </div>
+                <div id="auction-create" class="hide">
+                    <h1>Skapa en Auktion</h1>
+        
+                    <div id="auction-message-create">
+        
+                    </div>
+        
+                    <label for="auction-title">
+                        <strong>Titel:</strong>
+                    </label>
+                    <br>
+                    <input type="text" id="auction-title" size="40" pattern=".{3,}" required title="Title minimum 3 characters">
+                    <br>
+                    <strong>Beskrivning:</strong>
+                    <br>
+                    <textarea id="auction-description" pattern=".{10,255}" required title="Description should be 10 to 255 characters"></textarea>
+                    <br>
+                    <label for="auction-startingprice">
+                        <strong>Utropspris:</strong>
+                    </label>
+                    <br>
+                    <input type="number" min="1" value="1" align="right" id="auction-startingprice">
+                    <br>
+        
+                    <label for="auction-datetimestart">
+                        <strong>Start Datum:</strong>
+                    </label>
+                    <br>
+                    <input type="datetime-local" id="auction-datetimestart" disabled>
+                    <br>
+        
+                    <label for="auction-dateend">
+                        <strong>Slut Datum:</strong>
+                    </label>
+                    <br>
+                    <input type="date" id="auction-dateend">
+                    <input type="time" id="auction-timeend">
+                    <br>
+                    <br>
+                    <button id="auction-button-create">Skapa Auktion</button>
+                </div>
+        
+                <div id="auction-delete" class="hide">
+                    <h1>Ändra / Ta bort en Auktion</h1>
+        
+                    <div id="auction-message-delete">
+        
+                    </div>
+                    <div id="auction-list">
+        
+                    </div>
+                </div>
+            </main>
+        
+        </div>
 
     
 </body>
