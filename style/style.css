@@ -165,3 +165,9 @@ a
 {
     margin-right: 0.5em;
 }
+
+.center-content
+{
+    display: flex;
+    justify-content: center;
+}

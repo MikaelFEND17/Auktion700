@@ -35,6 +35,10 @@ class AuctionClass
         this.currentAuctionID = undefined;
     
         this.countdown = new CountDown();
+
+        this.auctionersPerPage = 3;
+        //this.auctionersPerPage = 5;
+        this.currentPage = 1;
     }
 
     LoadAuctions()
@@ -68,7 +72,7 @@ class AuctionClass
 
         
         let spanSortBy = document.createElement("span");
-        spanSortBy.innerHTML = " - <strong>Sort By:</strong> ";
+        spanSortBy.innerHTML = " - <strong>Sortera efter:</strong> ";
         auctionListNav.appendChild(spanSortBy);
 
         let linkSortByEndDate = document.createElement("a");
@@ -95,6 +99,8 @@ class AuctionClass
     HandleAuctionData(aData)
     {
         
+        let auctionCounter = 0;
+
         let divAuctionList = document.getElementById("auktion-list");
         for (let auction of aData)
         {
@@ -102,8 +108,43 @@ class AuctionClass
             newAuction.LoadBids(this.bidsURL);
             this.auctions.push(newAuction); 
 
-            this.PresentAuctionAsHTML(newAuction);
+            if (auctionCounter < this.auctionersPerPage)
+            {
+                this.PresentAuctionAsHTML(newAuction);
+                auctionCounter++;
+            }
         }
+        if (this.auctions.length > this.auctionersPerPage)
+        {
+            this.divAuctionList.appendChild(document.createElement("hr"));
+            
+            let pages = this.auctions.length%this.auctionersPerPage;
+
+            let divPages = document.createElement("div");
+            divPages.setAttribute("class", "center-content");
+            this.divAuctionList.appendChild(divPages);
+
+            for (let i = 0; i < pages; i++)
+            {
+                if (i !== 0)
+                {
+                    divPages.appendChild(document.createTextNode (" "));
+                    let paginationLink = document.createElement("a")
+                    paginationLink.setAttribute("href", "javascript:void(0)");
+                    paginationLink.appendChild(document.createTextNode (i+1));
+                    paginationLink.addEventListener("click", () => { auctionClass.ShowPage(i) });
+                    divPages.appendChild(paginationLink);
+                }
+                else
+                {
+                    divPages.appendChild(document.createTextNode ("1"));
+                }
+
+            }
+
+            this.currentPage = 1;
+        }
+
     }
 
     PresentAuctionAsHTML(aAuction)
@@ -164,7 +205,7 @@ class AuctionClass
             {       
                 if (bidAmount < startingPrice)
                 {
-                    document.getElementById("auction-bidmessage").innerHTML = "Bid of amount: " + bidAmount + " was lower than starting bid (" + startingPrice + ").";
+                    document.getElementById("auction-bidmessage").innerHTML = "Bud på: " + bidAmount + " är lägre än utropspriset (" + startingPrice + ").";
                 }
                 else if (bidAmount > bidToMatch)
                 {
@@ -180,7 +221,7 @@ class AuctionClass
                         }
                     }).then(function (data) {
                         console.log('Request success: ', 'posten skapad');
-                        document.getElementById("auction-bidmessage").innerHTML = "Bid of amount: " + bidAmount + " was succesfully placed.";
+                        document.getElementById("auction-bidmessage").innerHTML = "Bud på: " + bidAmount + " är accepterat.";
 
                         
                         auction.ClearBids();
@@ -192,7 +233,7 @@ class AuctionClass
                 }
                 else
                 {
-                    document.getElementById("auction-bidmessage").innerHTML = "Bid of amount: " + bidAmount + " was lower than highest bid (" + bidToMatch + ").";
+                    document.getElementById("auction-bidmessage").innerHTML = "Bud på: " + bidAmount + " är lägre än det högsta budet (" + bidToMatch + ").";
                 }
             }
         }
@@ -232,6 +273,53 @@ class AuctionClass
 
         auction.FillAuctionCard(this.pID, this.pTitle, this.pDescription, this.pStartDate, this.pEndDate, this.pCountDown, this.pStartingPrice, this.pHighestBid, this.pNumBids, this.inputBid, this.btnBidSubmit, this.aLinkShowAllBids, this.countdown);
 
+    }
+
+    ShowPage(aPageNumber)
+    {
+        this.currentPage = aPageNumber;
+
+        let startIndex = this.auctionersPerPage * aPageNumber;
+
+        this.ClearDOMChildrens(this.divAuctionList);
+
+        for (let i = this.auctionersPerPage * aPageNumber; i < startIndex+this.auctionersPerPage; i++)
+        {
+            if (i >= this.auctions.length)
+            {
+                break;
+            }
+            
+            this.PresentAuctionAsHTML(this.auctions[i]);
+        }
+
+        this.divAuctionList.appendChild(document.createElement("hr"));
+            
+        let pages = this.auctions.length%this.auctionersPerPage;
+
+        let divPages = document.createElement("div");
+        divPages.setAttribute("class", "center-content");
+        this.divAuctionList.appendChild(divPages);
+
+        for (let i = 0; i < pages; i++)
+        {
+            if (i !== aPageNumber)
+            {
+                divPages.appendChild(document.createTextNode (" "));
+                let paginationLink = document.createElement("a")
+                paginationLink.setAttribute("href", "javascript:void(0)");
+                paginationLink.appendChild(document.createTextNode (i+1));
+                paginationLink.addEventListener("click", () => { auctionClass.ShowPage(i) });
+                divPages.appendChild(paginationLink);
+            }
+            else
+            {
+                divPages.appendChild(document.createTextNode (aPageNumber+1));
+            }
+
+        }
+
+    
     }
 
     SortByEndDate()
@@ -277,7 +365,7 @@ class AuctionClass
             }
 
             let searchText = document.createElement("span");
-            searchText.innerHTML += "<strong>Search results for:</strong> " + searchWord + " (<strong>Total:</strong> " + searchResult.length + ")";
+            searchText.innerHTML += "<strong>Sök resultat för:</strong> " + searchWord + " (<strong>Antal:</strong> " + searchResult.length + ")";
 
             this.divSearch.appendChild(searchText);
 
