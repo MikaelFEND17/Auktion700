@@ -33,7 +33,18 @@ main
     border-radius: 10px;
     border: 2px solid #c0b283;
     display: flex;
-    margin-top: 1em;
+    margin: 1em 0em;
+}
+
+footer
+{
+    background-color: #f4f4f4;
+    width: 90%;
+    padding: 1em;
+    border-radius: 10px;
+    border: 2px solid #c0b283;
+    display: flex;
+    justify-content: flex-end;
 }
 
 #wrapper

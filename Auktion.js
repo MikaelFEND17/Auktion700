@@ -36,8 +36,7 @@ class AuctionClass
     
         this.countdown = new CountDown();
 
-        this.auctionersPerPage = 3;
-        //this.auctionersPerPage = 5;
+        this.auctionersPerPage = 10;
         this.currentPage = 1;
     }
 
