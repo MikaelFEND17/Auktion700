@@ -31,12 +31,14 @@ class AuctionClass
         btnSearch.addEventListener("click", () => { auctionClass.Search(); } );
     
         this.aLinkShowAllBids = document.getElementById("auction-showallbids");
+
+        this.selectPerPage = null;
     
         this.currentAuctionID = undefined;
     
         this.countdown = new CountDown();
 
-        this.auctionersPerPage = 10;
+        this.auctionsPerPage = 10;
         this.currentPage = 1;
     }
 
@@ -63,36 +65,59 @@ class AuctionClass
         
         let auctionListNav = document.getElementById("auction-list-nav");
         
+        let divNavLinks = document.createElement("div");
+        divNavLinks.setAttribute("id", "auction-list-nav-links");
+        auctionListNav.appendChild(divNavLinks);
+
         let linkRefreshList = document.createElement("a");
         let linkRefreshText = document.createTextNode("Uppdatera listan");
         linkRefreshList.setAttribute("href", "javascript:void(0)" );
         linkRefreshList.appendChild(linkRefreshText);
-        auctionListNav.appendChild(linkRefreshList);
+        divNavLinks.appendChild(linkRefreshList);
 
         
         let spanSortBy = document.createElement("span");
         spanSortBy.innerHTML = " - <strong>Sortera efter:</strong> ";
-        auctionListNav.appendChild(spanSortBy);
+        divNavLinks.appendChild(spanSortBy);
 
         let linkSortByEndDate = document.createElement("a");
         let linkSortByEndDateText = document.createTextNode("Slut Datum");
         linkSortByEndDate.appendChild(linkSortByEndDateText);
         linkSortByEndDate.setAttribute("href", "javascript:void(0)" );
         linkSortByEndDate.addEventListener("click", () => { auctionClass.SortByEndDate() });
-        auctionListNav.appendChild(linkSortByEndDate);
+        divNavLinks.appendChild(linkSortByEndDate);
 
         let spanDivider = document.createElement("span");
         let spanDividerText = document.createTextNode(" / ");
         spanDivider.appendChild(spanDividerText);
-        auctionListNav.appendChild(spanDivider);
+        divNavLinks.appendChild(spanDivider);
 
         let linkSortByStartingPrice = document.createElement("a");
         let linkSortByStartingPriceText = document.createTextNode("Utropspris");
         linkSortByStartingPrice.appendChild(linkSortByStartingPriceText);
         linkSortByStartingPrice.setAttribute("href", "javascript:void(0)" );
         linkSortByStartingPrice.addEventListener("click", () => { auctionClass.SortByStartingPrice() });
-        auctionListNav.appendChild(linkSortByStartingPrice);
+        divNavLinks.appendChild(linkSortByStartingPrice);
 
+        let divPerPage = document.createElement("div");
+
+        let strongPerPage = document.createElement("strong");
+        let strongPerPageText = document.createTextNode("Per Page:");
+        strongPerPage.setAttribute("id", "auction-list-nav-select-text");
+        strongPerPage.appendChild(strongPerPageText);
+        divPerPage.appendChild(strongPerPage);
+
+        divPerPage.setAttribute("id", "auction-list-nav-select");
+        this.selectPerPage = document.createElement("select");
+        this.selectPerPage.add(new Option("5", "5"))
+        this.selectPerPage.add(new Option("10", "10", true, true))
+        this.selectPerPage.add(new Option("15", "15"));
+        this.selectPerPage.add(new Option("20", "20"));
+
+        this.selectPerPage.addEventListener("change", () => this.SetNumPerPage());
+
+        divPerPage.appendChild(this.selectPerPage);
+        auctionListNav.appendChild(divPerPage);
     }
 
     HandleAuctionData(aData)
@@ -107,17 +132,17 @@ class AuctionClass
             newAuction.LoadBids(this.bidsURL);
             this.auctions.push(newAuction); 
 
-            if (auctionCounter < this.auctionersPerPage)
+            if (auctionCounter < this.auctionsPerPage)
             {
                 this.PresentAuctionAsHTML(newAuction);
                 auctionCounter++;
             }
         }
-        if (this.auctions.length > this.auctionersPerPage)
+        if (this.auctions.length > this.auctionsPerPage)
         {
             this.divAuctionList.appendChild(document.createElement("hr"));
             
-            let pages = this.auctions.length%this.auctionersPerPage;
+            let pages = this.auctions.length%this.auctionsPerPage;
 
             let divPages = document.createElement("div");
             divPages.setAttribute("class", "center-content");
@@ -138,12 +163,10 @@ class AuctionClass
                 {
                     divPages.appendChild(document.createTextNode ("1"));
                 }
-
             }
 
             this.currentPage = 1;
         }
-
     }
 
     PresentAuctionAsHTML(aAuction)
@@ -271,7 +294,6 @@ class AuctionClass
         this.aLinkShowAllBids = clone;
 
         auction.FillAuctionCard(this.pID, this.pTitle, this.pDescription, this.pStartDate, this.pEndDate, this.pCountDown, this.pStartingPrice, this.pHighestBid, this.pNumBids, this.inputBid, this.btnBidSubmit, this.aLinkShowAllBids, this.countdown);
-
     }
 
     ShowPage(aPageNumber)
@@ -282,7 +304,7 @@ class AuctionClass
 
         this.ClearDOMChildrens(this.divAuctionList);
 
-        for (let i = this.auctionersPerPage * aPageNumber; i < startIndex+this.auctionersPerPage; i++)
+        for (let i = this.auctionsPerPage * aPageNumber; i < startIndex+this.auctionsPerPage; i++)
         {
             if (i >= this.auctions.length)
             {
@@ -294,7 +316,7 @@ class AuctionClass
 
         this.divAuctionList.appendChild(document.createElement("hr"));
             
-        let pages = this.auctions.length%this.auctionersPerPage;
+        let pages = this.auctions.length%this.auctionsPerPage;
 
         let divPages = document.createElement("div");
         divPages.setAttribute("class", "center-content");
@@ -315,10 +337,7 @@ class AuctionClass
             {
                 divPages.appendChild(document.createTextNode (aPageNumber+1));
             }
-
         }
-
-    
     }
 
     SortByEndDate()
@@ -354,10 +373,8 @@ class AuctionClass
             console.log(searchWord);
             let searchResult = this.auctions.filter((obj) => obj["title"].toUpperCase().indexOf(searchWord.toUpperCase()) > -1 || obj["description"].toUpperCase().indexOf(searchWord.toUpperCase()) > -1); 
             
-            //Rensa listan
             this.ClearDOMChildrens(this.divAuctionList);
             
-            //Fyll på med Sökresultat
             for (let auction of searchResult)
             {
                 this.PresentAuctionAsHTML(auction);
@@ -378,7 +395,6 @@ class AuctionClass
             linkShowAll.addEventListener("click", () => this.ShowAllAuctions());
 
             this.divSearch.appendChild(linkShowAll);
-
         }
     }
 
@@ -399,6 +415,11 @@ class AuctionClass
         {
             this.PresentAuctionAsHTML(auction);
         }
+    }
+
+    SetNumPerPage()
+    {
+        this.auctionersPerPage = this.selectPerPage.value;
     }
 }
 
@@ -430,11 +451,8 @@ class Auction
         aShowAllBidsLink.innerHTML = "Visa alla bud";
         aShowAllBidsLink.addEventListener("click", () => { this.ShowAllBids() } );
         
-        
         aCountDown.StopCountDown();
         aCountDown.StartCountdown(this.endDate, aCoundDownElement);
-
-        //Update Bid Button 
         
         aBidButton.addEventListener("click", () => { auctionClass.CheckBid(this.auctionID) }); 
 
@@ -535,7 +553,6 @@ class Auction
             {
                 pAllBids.innerHTML += "<strong>BudID:</strong> " + bid.bidID + " <strong>Summa:</strong> " + bid.sum + "<br>";
             }
-
         }
     }
 }

@@ -73,6 +73,25 @@ footer
     border-bottom: 1px solid #373737;
     padding: 0.5em;
     margin-bottom: 0.5em;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#auction-list-nav-links
+{
+    width: 80%;
+}
+
+#auction-list-nav-select
+{
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#auction-list-nav-select-text
+{
+    margin-right: 0.5em;
 }
 
 #auction-details 
