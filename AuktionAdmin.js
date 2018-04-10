@@ -309,6 +309,14 @@ class AuctionAdmin
         inputEndTime.setAttribute("value", endTime);
     }
 
+    CreateElementAndAppendTo(aString, anElement)
+    {
+        let element = document.createElement(aString);
+        anElement.appendChild(element);
+
+        return element;
+    }
+
     EditAuction(aID)
     {
         let titleMinLegth = 3;

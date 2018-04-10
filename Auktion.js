@@ -109,8 +109,8 @@ class AuctionClass
 
         divPerPage.setAttribute("id", "auction-list-nav-select");
         this.selectPerPage = document.createElement("select");
-        this.selectPerPage.add(new Option("5", "5"))
-        this.selectPerPage.add(new Option("10", "10", true, true))
+        this.selectPerPage.add(new Option("5", "5"));
+        this.selectPerPage.add(new Option("10", "10", true, true));
         this.selectPerPage.add(new Option("15", "15"));
         this.selectPerPage.add(new Option("20", "20"));
 
